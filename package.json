@@ -4,7 +4,8 @@
   "description": "Backup all Docker volumes present to cloud storage encrypted & compressed.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src"
   },
   "author": "Esinko <dev@esinko.net> (https://github.com/Esinko)",
   "license": "MIT",
