@@ -1,7 +1,7 @@
 {
-  "name": "google-drive-backup",
+  "name": "volume-backup",
   "version": "0.0.1",
-  "description": "Backup all Docker volumes present to a shared Google drive location encrypted & compressed.",
+  "description": "Backup all Docker volumes present to cloud storage encrypted & compressed.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
