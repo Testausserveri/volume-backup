@@ -45,8 +45,8 @@ async function createBackupArchive() {
     return `./cache/${cacheDirectory}.tar.gz`
 }
 
-function doBackup() {
-    const backupPath = encrypt(createBackupArchive())
+async function doBackup() {
+    const backupPath = await encrypt(await createBackupArchive())
     console.log("Backup ", backupPath, "crated.")
 }
 
