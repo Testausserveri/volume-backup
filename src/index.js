@@ -1,7 +1,10 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-restricted-syntax */
 require("dotenv").config()
-const { randomUUID } = require("crypto")
+let { randomUUID } = require("crypto")
+
+if (!randomUUID) randomUUID = crypto.randomBytes(16).toString("hex")
+
 const {
     existsSync,
     mkdirSync,
