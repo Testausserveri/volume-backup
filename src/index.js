@@ -31,7 +31,7 @@ async function createBackupArchive() {
             file: `./cache/${cacheDirectory}/${volume.driver}_${volume.name}.tar.gz`,
             gzip: true
         },
-        [volume.mountpoint])
+        [`${volume.mountpoint}/`])
     }
     // Create the final directory
     writeFileSync(`./cache/${cacheDirectory}/info.json`, JSON.stringify({
