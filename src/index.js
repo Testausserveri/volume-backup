@@ -26,6 +26,7 @@ async function createBackupArchive() {
     mkdirSync(`./cache/${cacheDirectory}`)
     // Create archives in cache
     for await (const volume of volumes) {
+        console.log("Archiving", volume.mountpoint)
         await create({
             file: `./cache/${cacheDirectory}/${volume.driver}_${volume.name}.tar.gz`,
             gzip: true
