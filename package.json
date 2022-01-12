@@ -1,0 +1,22 @@
+{
+  "name": "google-drive-backup",
+  "version": "0.0.1",
+  "description": "Backup all Docker volumes present to a shared Google drive location encrypted & compressed.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Esinko <dev@esinko.net> (https://github.com/Esinko)",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^11.0.0",
+    "minimist": "^1.2.5",
+    "tar": "^6.1.11"
+  },
+  "devDependencies": {
+    "eslint": "^8.5.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0"
+  }
+}
