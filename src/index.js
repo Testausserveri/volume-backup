@@ -11,12 +11,13 @@ const {
 const { create } = require("tar")
 
 const docker = require("./docker")
+const encrypt = require("./encrypt")
 
 /**
  * Create a backup archive
  * @returns {string} The backup relative file path
  */
-async function createBackup() {
+async function createBackupArchive() {
     const volumes = docker.getVolumes()
     const cacheDirectory = randomUUID().replace(/-/g, "")
     if (!existsSync("./cache") && statSync("./cache").isDirectory()) mkdirSync("./cache")
@@ -44,4 +45,10 @@ async function createBackup() {
     return `./cache/${cacheDirectory}.tar.gz`
 }
 
-console.log(createBackup())
+function doBackup() {
+    const backupPath = encrypt(createBackupArchive())
+    console.log("Backup ", backupPath, "crated.")
+}
+
+console.log("Creating a backup...")
+doBackup()
