@@ -11,6 +11,7 @@ module.exports = (filepath) => new Promise((resolve) => {
     const output = createWriteStream(`${filepath}.encrypted`)
     const iv = randomBytes(16)
     const cipher = createHash("sha256").update(process.env.ENCRYPTION_KEY).digest("base64").substr(0, 32)
+    output.write(iv) // The initialization vector is the first 16 bytes
     input.pipe(createCipheriv("aes-256-cbc", cipher, iv)).pipe(output)
-    output.on("finish", resolve(`${iv}-${filepath}.encrypted`))
+    output.on("finish", resolve(`${filepath}.encrypted`))
 })
