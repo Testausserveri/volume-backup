@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-restricted-syntax */
 require("dotenv").config()
-let { randomBytes } = require("crypto")
+const { randomBytes } = require("crypto")
 
 const {
     existsSync,
@@ -21,7 +21,7 @@ const encrypt = require("./encrypt")
 async function createBackupArchive() {
     const volumes = docker.getVolumes()
     const cacheDirectory = randomBytes(16).toString("hex")
-    if (!existsSync("./cache") && statSync("./cache").isDirectory()) mkdirSync("./cache")
+    if (!existsSync("./cache") || statSync("./cache").isDirectory()) mkdirSync("./cache")
     if (existsSync(`./cache/${cacheDirectory}`)) throw "Cache already exists."
     mkdirSync(`./cache/${cacheDirectory}`)
     // Create archives in cache
