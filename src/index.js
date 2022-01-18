@@ -27,7 +27,7 @@ async function createBackupArchive() {
     // Create archives in cache
     for await (const container of containers) {
         console.debug("Container", container)
-        for await (const mount of container.mounts) {
+        for await (const mount of docker.getMounts(container.CONTAINER_ID)) {
             console.log("Archiving", mount.mountpoint)
             const file = `${mount.type}-${container.id}-${randomBytes(3).toString("hex")}.tar.gz`
             await create({
@@ -35,7 +35,7 @@ async function createBackupArchive() {
                 gzip: true
             },
             [`${mount.mountpoint}/`])
-            mount.archive = file
+            container.ARCHIVE = file
         }
     }
     // Create the final directory

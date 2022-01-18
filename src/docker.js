@@ -26,54 +26,27 @@ function execSyncUnsafe(command) {
 }
 
 /**
- * Get the containers that are using a specific volume
- * @param {string} volume
- * @returns {Array<>}
+ * Get data field positions
+ * @param {string} fields
+ * @param {string} line
+ * @returns {{}}
  */
-function getVolumeContainers(volume) {
-    return execSyncUnsafe(`docker ps -a --filter volume=${volume}`)[1]
-        .toString()
-        .trim()
-        .split("\n")
-        .splice(1)
-        .map((line) => line.split("   "))
-        .map((line) => ({
-            id: line[0],
-            name: line.slice(0).reverse()[0].trim(),
-            image: line[1],
-            created: line[3],
-            status: line[4]
-        }))
-}
-
-/**
- * Get a volume's mountpoint
- * @param {string} volume
- * @returns {string}
- */
-function getVolumeMountPoint(volume) {
-    return JSON.parse(
-        execSyncUnsafe(`docker volume inspect ${volume}`)[1]
-    )[0].Mountpoint
-}
-
-/**
- * Get all Docker volumes
- * @returns {Array<DockerVolume>}
- */
-function getVolumes() {
-    return execSync("docker volume ls --filter")
-        .toString()
-        .trim()
-        .split("\n")
-        .splice(1)
-        .map((line) => line.split("   "))
-        .map((line) => ({
-            name: line[1],
-            driver: line[0],
-            mountpoint: getVolumeMountPoint(line[1]),
-            containers: getVolumeContainers(line[1])
-        }))
+function getFieldPositions(fields, line) {
+    const positions = []
+    positions.push(fields.split("").reduce((prev, cur, index, ar) => {
+        if (cur !== " ") return typeof prev === "string" ? `${prev}${cur}` : (() => { positions.push(prev); return cur })()
+        if (ar[index + 1] !== " " && typeof prev !== "number") return typeof prev === "string" ? `${prev}${cur}` : () => { positions.push(prev); return cur }
+        if (typeof prev !== "number") return (() => { positions.push(prev); return 1 })()
+        return prev + 1
+    }))
+    const data = line.split("")
+    const values = positions
+        .map((position, index, ar) => (typeof position === "string" ? data.splice(0, ar[index + 1] !== undefined ? ar[index + 1] + position.length : Infinity).join("").trim() : null))
+        .filter((val) => val !== null)
+    const keys = positions
+        .filter((position) => typeof position === "string")
+        .map((key) => key.replace(/ /g, "_"))
+    return Object.fromEntries(new Array(keys.length).fill(0).map((entry, index) => [keys[index], values[index]]))
 }
 
 /**
@@ -85,22 +58,13 @@ function getContainers() {
         .toString()
         .trim()
         .split("\n")
+        .map((line, index, ar) => (index !== 0 ? getFieldPositions(ar[0], line) : line))
         .splice(1)
-        .map((line) => line.split("   "))
-        .map((line) => ({
-            id: line[0],
-            name: line.splice().reverse()[0],
-            image: line[1],
-            command: line[2],
-            created: line[3],
-            status: line[4],
-            ports: line[5] && line[5].trim().length > 0 ? line[5] : null
-        }))
 }
 
 /**
  * Get all Docker mounts
- * @returns {Array<DockerContainer>}
+ * @returns {Array<DockerMount>}
  */
 function getMounts() {
     return getContainers()
@@ -120,9 +84,7 @@ function getMounts() {
 }
 
 module.exports = {
-    getVolumes,
-    getVolumeContainers,
-    getVolumeMountPoint,
     getMounts,
-    getContainers
+    getContainers,
+    getFieldPositions
 }
