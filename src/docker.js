@@ -76,7 +76,7 @@ function getContainers() {
  * @returns {Array<DockerMount>}
  */
 function getMount(id) {
-    console.log(execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`))
+    console.log(execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[2].toString())
     return JSON.parse(
         execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[1]
             .toString()
