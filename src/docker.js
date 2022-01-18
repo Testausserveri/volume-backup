@@ -20,6 +20,7 @@ function execSyncUnsafe(command) {
     // TODO: This could be done better. Argument parsing breaks when we have spaces in fields
     const args = command.replace(`${executableName} `, "").split(" ")
     const executable = execSync(`whereis ${executableName}`).toString().split(" ")[1]
+    console.log("EXEC", executable, "ARGS", args)
     const proc = spawnSync(executable, args)
     if (proc.error) throw proc.error
     return spawnSync(executable, args).output
@@ -76,7 +77,7 @@ function getContainers() {
  * @returns {Array<DockerMount>}
  */
 function getMount(id) {
-    console.log(execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[2].toString())
+    console.log(execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[1].toString())
     return JSON.parse(
         execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[1]
             .toString()
