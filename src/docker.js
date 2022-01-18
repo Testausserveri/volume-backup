@@ -1,7 +1,10 @@
 const { execSync, spawnSync } = require("child_process")
 
 /**
- * @typedef {{ id: string, name: string, image: string, created: string, status: string}} DockerContainer Docker container object
+ * @typedef {{ type: string, mountpoint: string}} DockerMount
+ */
+/**
+ * @typedef {{ id: string, name: string, image: string, created: string, status: string, ports: string|null, mounts: Array<DockerMount>|null }} DockerContainer Docker container object
  */
 /**
  * @typedef {{ name: string, driver: string, mountpoint: string, containers: Array<DockerContainer>}} DockerVolume Docker volume object
@@ -59,7 +62,7 @@ function getVolumeMountPoint(volume) {
  * @returns {Array<DockerVolume>}
  */
 function getVolumes() {
-    return execSync("docker volume ls --filter dangling=false")
+    return execSync("docker volume ls --filter")
         .toString()
         .trim()
         .split("\n")
@@ -73,8 +76,53 @@ function getVolumes() {
         }))
 }
 
+/**
+ * List all Docker containers
+ * @returns {Array<DockerContainer>}
+ */
+function getContainers() {
+    return execSync("docker container list")
+        .toString()
+        .trim()
+        .split("\n")
+        .splice(1)
+        .map((line) => line.split("     "))
+        .map((line) => ({
+            id: line[0],
+            name: line.splice().reverse()[0],
+            image: line[1],
+            command: line[2],
+            created: line[3],
+            status: line[4],
+            ports: line[5].trim().length > 0 ? line[5] : null
+        }))
+}
+
+/**
+ * Get all Docker mounts
+ * @returns {Array<DockerContainer>}
+ */
+function getMounts() {
+    return getContainers()
+        .map((container) => ({
+            name: container.name,
+            id: container.id,
+            mounts:
+                JSON.parse(
+                    execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${container.id}`)[1]
+                        .toString()
+                        .trim() ?? []
+                ).map((mount) => ({
+                    type: mount.Type,
+                    mountpoint: mount.Source
+                }))
+        }))
+}
+
 module.exports = {
     getVolumes,
     getVolumeContainers,
-    getVolumeMountPoint
+    getVolumeMountPoint,
+    getMounts,
+    getContainers
 }

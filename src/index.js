@@ -19,24 +19,28 @@ const encrypt = require("./encrypt")
  * @returns {string} The backup relative file path
  */
 async function createBackupArchive() {
-    const volumes = docker.getVolumes()
+    const containers = docker.getContainers()
     const cacheDirectory = randomBytes(16).toString("hex")
     if (!existsSync("./cache") || !statSync("./cache").isDirectory()) mkdirSync("./cache")
     if (existsSync(`./cache/${cacheDirectory}`)) throw "Cache already exists."
     mkdirSync(`./cache/${cacheDirectory}`)
     // Create archives in cache
-    for await (const volume of volumes) {
-        console.log("Archiving", volume.mountpoint)
-        await create({
-            file: `./cache/${cacheDirectory}/${volume.driver}_${volume.name}.tar.gz`,
-            gzip: true
-        },
-        [`${volume.mountpoint}/`])
+    for await (const container of containers) {
+        for await (const mount of container.mounts) {
+            console.log("Archiving", mount.mountpoint)
+            const file = `${mount.type}-${container.id}-${randomBytes(3).toString("hex")}.tar.gz`
+            await create({
+                file: `./cache/${cacheDirectory}/${file}`,
+                gzip: true
+            },
+            [`${mount.mountpoint}/`])
+            mount.archive = file
+        }
     }
     // Create the final directory
     writeFileSync(`./cache/${cacheDirectory}/info.json`, JSON.stringify({
         timestamp: new Date().getTime(),
-        volumes
+        containers
     }))
     // Convert the final directory to .tar.gz
     await create({
@@ -49,7 +53,7 @@ async function createBackupArchive() {
 
 async function doBackup() {
     const backupPath = await encrypt(await createBackupArchive())
-    console.log("Backup ", backupPath, "crated.")
+    console.log("Backup ", backupPath, "created.")
 }
 
 console.log("Creating a backup...")
