@@ -18,10 +18,10 @@ const { execSync, spawnSync } = require("child_process")
 function execSyncUnsafe(command) {
     const executableName = command.split(" ")[0]
     // TODO: This could be done better. Argument parsing breaks when we have spaces in fields
-    const args = command.replace(`${executableName} `, "").split(" ")
+    const args = command.replace(`${executableName} `, "").split(" ").map((arg) => decodeURIComponent(arg))
     const executable = execSync(`whereis ${executableName}`).toString().split(" ")[1]
     console.log("EXEC", executable, "ARGS", args)
-    const proc = spawnSync(executable, args.map((arg) => decodeURIComponent(arg)))
+    const proc = spawnSync(executable, args)
     if (proc.error) throw proc.error
     return spawnSync(executable, args).output
 }
