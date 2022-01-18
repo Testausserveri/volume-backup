@@ -94,7 +94,7 @@ function getContainers() {
             command: line[2],
             created: line[3],
             status: line[4],
-            ports: line[5].trim().length > 0 ? line[5] : null
+            ports: line[5] && line[5].trim().length > 0 ? line[5] : null
         }))
 }
 
