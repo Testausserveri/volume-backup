@@ -67,7 +67,7 @@ function getVolumes() {
         .trim()
         .split("\n")
         .splice(1)
-        .map((line) => line.split("     "))
+        .map((line) => line.split("   "))
         .map((line) => ({
             name: line[1],
             driver: line[0],
@@ -86,7 +86,7 @@ function getContainers() {
         .trim()
         .split("\n")
         .splice(1)
-        .map((line) => line.split("     "))
+        .map((line) => line.split("   "))
         .map((line) => ({
             id: line[0],
             name: line.splice().reverse()[0],
