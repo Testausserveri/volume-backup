@@ -55,7 +55,7 @@ async function createBackupArchive() {
 
 async function doBackup() {
     const backupPath = await encrypt(await createBackupArchive())
-    console.log("Backup ", backupPath, "created.")
+    console.log("Backup", backupPath, "created.")
 }
 
 console.log("Creating a backup...")
