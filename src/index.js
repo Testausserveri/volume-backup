@@ -28,6 +28,7 @@ async function createBackupArchive() {
     for await (const container of containers) {
         if (container.name.includes("kaatis")) continue // TODO: Remove from production
         console.log("Processing", container.name, `(${container.id})`)
+        container.archives = []
         for await (const mount of docker.getMount(container.id)) {
             console.log("   Archiving", mount.mountpoint)
             const file = `${mount.type}-${container.id}-${randomBytes(3).toString("hex")}.tar.gz`
@@ -36,7 +37,7 @@ async function createBackupArchive() {
                 gzip: true
             },
             [`${mount.mountpoint}/`])
-            container.archive = file
+            container.archives.push({ mountpoint: mount.mountpoint, archive: file })
         }
     }
     // Create the final directory
