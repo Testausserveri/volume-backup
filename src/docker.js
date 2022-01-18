@@ -4,7 +4,7 @@ const { execSync, spawnSync } = require("child_process")
  * @typedef {{ type: string, mountpoint: string}} DockerMount
  */
 /**
- * @typedef {{ id: string, name: string, image: string, created: string, status: string, ports: string|null, mounts: Array<DockerMount>|null }} DockerContainer Docker container object
+ * @typedef {{ id: string, name: string, image: string, created: string, status: string, ports: string|null }} DockerContainer Docker container object
  */
 /**
  * @typedef {{ name: string, driver: string, mountpoint: string, containers: Array<DockerContainer>}} DockerVolume Docker volume object
@@ -72,24 +72,18 @@ function getContainers() {
 }
 
 /**
- * Get all Docker mounts
+ * Get the mounts of a Docker container
  * @returns {Array<DockerMount>}
  */
-function getMounts() {
-    return getContainers()
-        .map((container) => ({
-            name: container.name,
-            id: container.id,
-            mounts:
-                JSON.parse(
-                    execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${container.id}`)[1]
-                        .toString()
-                        .trim() ?? "[]"
-                ).map((mount) => ({
-                    type: mount.Type,
-                    mountpoint: mount.Source
-                }))
-        }))
+function getMount(id) {
+    return JSON.parse(
+        execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[1]
+            .toString()
+            .trim() ?? "[]"
+    ).map((mount) => ({
+        type: mount.Type,
+        mountpoint: mount.Source
+    }))
 }
 
 module.exports = {
