@@ -32,6 +32,15 @@ function execSyncUnsafe(command) {
  * @returns {{}}
  */
 function getFieldPositions(fields, line) {
+    const keyTable = {
+        CONTAINER_ID: "id",
+        IMAGE: "image",
+        COMMAND: "command",
+        CREATED: "created",
+        STATUS: "status",
+        PORTS: "ports",
+        NAMES: "name"
+    }
     const positions = []
     positions.push(fields.split("").reduce((prev, cur, index, ar) => {
         if (cur !== " ") return typeof prev === "string" ? `${prev}${cur}` : (() => { positions.push(prev); return cur })()
@@ -45,7 +54,7 @@ function getFieldPositions(fields, line) {
         .filter((val) => val !== null)
     const keys = positions
         .filter((position) => typeof position === "string")
-        .map((key) => key.replace(/ /g, "_"))
+        .map((key) => keyTable[key.replace(/ /g, "_")])
     return Object.fromEntries(new Array(keys.length).fill(0).map((entry, index) => [keys[index], values[index]]))
 }
 
@@ -75,7 +84,7 @@ function getMounts() {
                 JSON.parse(
                     execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${container.id}`)[1]
                         .toString()
-                        .trim() ?? []
+                        .trim() ?? "[]"
                 ).map((mount) => ({
                     type: mount.Type,
                     mountpoint: mount.Source
