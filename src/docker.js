@@ -11,7 +11,7 @@ const { execSync, spawnSync } = require("child_process")
  */
 
 /**
- * Execute command with unsafe input
+ * Execute command with unsafe input, urlEncode args to maintain spaces
  * @param {string} command
  * @returns {Array<T | null>}
  */
@@ -21,7 +21,7 @@ function execSyncUnsafe(command) {
     const args = command.replace(`${executableName} `, "").split(" ")
     const executable = execSync(`whereis ${executableName}`).toString().split(" ")[1]
     console.log("EXEC", executable, "ARGS", args)
-    const proc = spawnSync(executable, args)
+    const proc = spawnSync(executable, args.map((arg) => decodeURIComponent(arg)))
     if (proc.error) throw proc.error
     return spawnSync(executable, args).output
 }
@@ -77,7 +77,7 @@ function getContainers() {
  * @returns {Array<DockerMount>}
  */
 function getMount(id) {
-    console.log(execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[1].toString())
+    console.log(execSyncUnsafe(`docker inspect --format='{{json%20.Mounts}}' ${id}`)[1].toString())
     return JSON.parse(
         execSyncUnsafe(`docker inspect --format='{{json .Mounts}}' ${id}`)[1]
             .toString()
