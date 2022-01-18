@@ -87,7 +87,6 @@ function getMount(id) {
 }
 
 module.exports = {
-    getMounts,
-    getContainers,
-    getFieldPositions
+    getMount,
+    getContainers
 }
