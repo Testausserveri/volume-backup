@@ -55,7 +55,7 @@ function getFieldPositions(fields, line) {
     const keys = positions
         .filter((position) => typeof position === "string")
         .map((key) => keyTable[key.replace(/ /g, "_")])
-    return Object.fromEntries(new Array(keys.length).fill(0).map((entry, index) => [keys[index], values[index]]))
+    return Object.fromEntries(new Array(keys.length).fill(0).map((_, index) => [keys[index], values[index]]))
 }
 
 /**
@@ -79,7 +79,8 @@ function getMount(id) {
     return JSON.parse(
         execSyncUnsafe(`docker inspect --format='{{json%20.Mounts}}' ${id}`)[1]
             .toString()
-            .trim() ?? "[]"
+            .trim()
+            .replace(/'/g, "") ?? "[]"
     ).map((mount) => ({
         type: mount.Type,
         mountpoint: mount.Source
