@@ -34,10 +34,10 @@ async function createBackupArchive() {
     // Create archives in cache
     for await (const container of containers) {
         if (!process.env.BLACKLIST.split(";").includes(container.name)) {
-            console.log("               Processing", container.name, `(${container.id})`)
+            console.log("Processing", container.name, `(${container.id})`)
             container.archives = []
             for await (const mount of docker.getMount(container.id)) {
-                console.log("                   -> Archiving", mount.mountpoint)
+                console.log(" ->", mount.mountpoint)
                 const file = `${mount.type}-${container.id}-${randomBytes(3).toString("hex")}.tar.gz`
                 await create({
                     file: `./cache/${cacheDirectory}/${file}`,
@@ -67,18 +67,18 @@ async function createBackupArchive() {
  */
 async function doBackup() {
     console.log("Creating a backup...")
-    console.log("      Running Docker volume discovery...")
+    console.log("Running Docker volume discovery...")
     // Create archive & upload
     const archive = await createBackupArchive()
     const cacheDirectory = archive.replace(".tar.gz", "")
-    console.log(`   -> Archive created (${archive})`)
+    console.log(`Archive created (${archive})`)
     const backupPath = await encrypt(archive)
-    console.log(`   -> Archive encrypted (${backupPath})`)
-    console.log("      Uploading...")
+    console.log(`Archive encrypted (${backupPath})`)
+    console.log("Uploading...")
     const fileId = await uploadFile(backupPath.split("/").reverse()[0], "application/tar+gzip", process.env.DRIVE_ID, createReadStream(backupPath))
-    console.log(`   -> Uploaded (${fileId})`)
+    console.log(`-> Uploaded (${fileId})`)
     // Clear cache
-    console.log("      Cleaning up...")
+    console.log("Cleaning up...")
     rmSync(cacheDirectory, { recursive: true, force: true })
     rmSync(archive)
     rmSync(backupPath)
