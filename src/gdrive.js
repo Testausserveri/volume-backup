@@ -6,11 +6,11 @@ const token = require("../.token.json")
  * Upload a file to a specific shared drive
  * @param {string} name The file name
  * @param {string} mimeType The file mime type
- * @param {string} driveId The drive id
+ * @param {string} teamDriveId The drive id
  * @param {ReadableStream} body A readable stream that provides the file data
  * @returns {Promise<string>}
  */
-async function uploadFile(name, mimeType, driveId, body) {
+async function uploadFile(name, mimeType, teamDriveId, body) {
     const client = new auth.JWT(
         token.client_email,
         null,
@@ -18,13 +18,14 @@ async function uploadFile(name, mimeType, driveId, body) {
         ["https://www.googleapis.com/auth/drive.file"],
         null
     )
-    client.authorize((err) => { throw err })
+    client.authorize((err) => { if (err) throw err })
     const driveInstance = drive({ version: "v3", auth: client })
-    const resource = { name, mimeType, driveId }
+    const requestBody = { name, mimeType, teamDriveId, parents: [teamDriveId] }
     const media = { mimeType, body }
     const creation = await driveInstance.files.create({
-        resource, media, fields: "id", supportsTeamDrives: true
+        requestBody, media, fields: "id", supportsTeamDrives: true
     })
+    console.log(creation)
     if (creation?.data?.id) return creation.data.id
     throw new Error(creation)
 }
