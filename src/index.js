@@ -33,11 +33,11 @@ async function createBackupArchive() {
     mkdirSync(`./cache/${cacheDirectory}`)
     // Create archives in cache
     for await (const container of containers) {
-        if (!process.env.BLACKLIST.includes(container.name)) {
-            console.log("Processing", container.name, `(${container.id})`)
+        if (!process.env.BLACKLIST.split(";").includes(container.name)) {
+            console.log("       Processing", container.name, `(${container.id})`)
             container.archives = []
             for await (const mount of docker.getMount(container.id)) {
-                console.log("   Archiving", mount.mountpoint)
+                console.log("           -> Archiving", mount.mountpoint)
                 const file = `${mount.type}-${container.id}-${randomBytes(3).toString("hex")}.tar.gz`
                 await create({
                     file: `./cache/${cacheDirectory}/${file}`,
