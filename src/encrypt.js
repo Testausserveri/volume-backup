@@ -4,7 +4,7 @@ const { createCipheriv, createHash, randomBytes } = require("crypto")
 /**
  * Encrypt a file
  * @param {string} filepath
- * @returns {string} Encrypted output file path
+ * @returns {Promise<string>} Encrypted output file path
  */
 module.exports = (filepath) => new Promise((resolve) => {
     const input = createReadStream(filepath)

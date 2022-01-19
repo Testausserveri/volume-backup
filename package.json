@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src"
+    "start": "node ./src",
+    "decrypt": "node ./tool/decrypt"
   },
   "author": "Esinko <dev@esinko.net> (https://github.com/Esinko)",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^11.0.0",
+    "googleapis": "^39.2.0",
     "minimist": "^1.2.5",
     "tar": "^6.1.11"
   },
