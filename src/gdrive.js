@@ -25,7 +25,6 @@ async function uploadFile(name, mimeType, teamDriveId, body) {
     const creation = await driveInstance.files.create({
         requestBody, media, fields: "id", supportsTeamDrives: true
     })
-    console.log(creation)
     if (creation?.data?.id) return creation.data.id
     throw new Error(creation)
 }

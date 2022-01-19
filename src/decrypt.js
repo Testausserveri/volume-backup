@@ -15,7 +15,6 @@ module.exports = (filepath) => new Promise((resolve) => {
     input.on("data", (chunk) => {
         if (iv === undefined) {
             iv = chunk.slice(0, 16)
-            console.log("GOT IV", iv, chunk)
             decryptStream = createDecipheriv("aes-256-cbc", cipher, iv)
             decryptStream.pipe(output)
             decryptStream.write(chunk.slice(16))
