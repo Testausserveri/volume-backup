@@ -15,7 +15,7 @@ async function uploadFile(name, mimeType, driveId, body) {
         token.client_email,
         null,
         token.private_key,
-        ["https://www.googleapis.com/auth/drive.readonly"],
+        ["https://www.googleapis.com/auth/drive.file"],
         null
     )
     client.authorize((err) => { throw err })
