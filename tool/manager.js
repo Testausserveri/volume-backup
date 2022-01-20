@@ -13,7 +13,7 @@ console.log(`Runtime: ${process.version}`)
 
 require("../src/console")
 
-const timeToBackup = "14:13:50"
+const timeToBackup = "00:05:00"
 
 let tryAgain = false
 let tries = 0
