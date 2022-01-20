@@ -8,7 +8,9 @@ const { createDecipheriv, createHash } = require("crypto")
  */
 module.exports = (filepath) => new Promise((resolve) => {
     const input = createReadStream(filepath)
-    const output = createWriteStream(`${filepath}.decrypted`)
+    let newPath = filepath.replace("encrypted", "decrypted")
+    if (newPath === filepath) newPath += ".decrypted"
+    const output = createWriteStream(`${newPath}`)
     let iv
     const cipher = createHash("sha256").update(process.env.ENCRYPTION_KEY).digest("base64").substr(0, 32)
     let decryptStream
