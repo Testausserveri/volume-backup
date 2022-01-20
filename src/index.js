@@ -56,9 +56,10 @@ async function createBackupArchive() {
     // Convert the final directory to .tar.gz
     await create({
         file: `./cache/${cacheDirectory}.tar.gz`,
+        cwd: "./cache/",
         gzip: true
     },
-    [`./cache/${cacheDirectory}/`])
+    [`${cacheDirectory}/`])
     return `./cache/${cacheDirectory}.tar.gz`
 }
 
@@ -78,10 +79,10 @@ async function doBackup() {
     const fileId = await uploadFile(backupPath.split("/").reverse()[0], "application/tar+gzip", process.env.DRIVE_ID, createReadStream(backupPath))
     console.log(`-> Uploaded (${fileId})`)
     // Clear cache
-    //console.log("Cleaning up...")
-    //rmSync(cacheDirectory, { recursive: true, force: true })
-    //rmSync(archive)
-    r//mSync(backupPath)
+    console.log("Cleaning up...")
+    rmSync(cacheDirectory, { recursive: true, force: true })
+    rmSync(archive)
+    rmSync(backupPath)
     console.log("Done.")
 }
 doBackup()
