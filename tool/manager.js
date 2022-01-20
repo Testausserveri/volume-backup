@@ -19,7 +19,6 @@ let tries = 0
 // Run backup task ever night
 setInterval(async () => {
     // Check every if it's the time to backup
-    console.debug("Tick")
     const currentDate = new Date()
     const currentTime = `${currentDate.getHours().toString().padStart(2, "0")}:${currentDate.getMinutes().toString().padStart(2, "0")}:${currentDate.getSeconds().toString().padStart(2, "0")}`
     if (currentTime === timeToBackup || tryAgain) {
