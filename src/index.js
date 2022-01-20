@@ -11,12 +11,6 @@ const {
     createReadStream,
     rmSync
 } = require("fs")
-const Package = require("../package.json")
-
-console.log(`Package: ${Package.name}@${Package.version}`)
-console.log(`Runtime: ${process.version}`)
-
-require("./console")
 const docker = require("./docker")
 const encrypt = require("./encrypt")
 const { uploadFile } = require("./gdrive")
@@ -66,8 +60,7 @@ async function createBackupArchive() {
 /**
  * Create a backup & upload it to Google Drive
  */
-async function doBackup() {
-    console.log("Creating a backup...")
+module.exports = async function doBackup() {
     console.log("Running Docker volume discovery...")
     // Create archive & upload
     const archive = await createBackupArchive()
@@ -85,4 +78,3 @@ async function doBackup() {
     rmSync(backupPath)
     console.log("Done.")
 }
-doBackup()

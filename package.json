@@ -7,11 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src",
     "decrypt": "node ./tool/decrypt",
-    "encrypt": "node ./tool/encrypt"
+    "encrypt": "node ./tool/encrypt",
+    "manager": "node ./tool/manager"
   },
   "author": "Esinko <dev@esinko.net> (https://github.com/Esinko)",
   "license": "MIT",
   "dependencies": {
+    "discord.js": "^13.6.0",
     "dotenv": "^11.0.0",
     "googleapis": "^39.2.0",
     "minimist": "^1.2.5",
