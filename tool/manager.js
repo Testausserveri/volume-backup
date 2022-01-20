@@ -9,8 +9,6 @@ const Package = require("../package.json")
 console.log(`Package: ${Package.name}@${Package.version}`)
 console.log(`Runtime: ${process.version}`)
 
-// https://discord.com/api/webhooks/933691691775451136/sU4zIQTPSuR_AImUAhMVUVG96vJLGOs_A2oPYrta3opnaIcrv9jszrpZlHWucmigCNI5
-
 require("../src/console")
 
 const timeToBackup = "00:05:00"
