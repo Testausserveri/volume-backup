@@ -1,5 +1,6 @@
 require("dotenv").config()
 const { WebhookClient } = require("discord.js")
+const { existsSync, writeFileSync, readFileSync } = require("fs")
 const backup = require("../src/index")
 
 const webhookClient = new WebhookClient({ url: process.env.DISCORD_WEBHOOK })
@@ -15,6 +16,20 @@ const timeToBackup = "00:05:00"
 
 let tryAgain = false
 let tries = 0
+
+// Last backup
+if (!existsSync("./.lastBackup")) {
+    // We need to backup now
+    console.warn("Backup timestamp file does not exist. Taking a backup now.")
+    tryAgain = true
+    writeFileSync("./.lastBackup", new Date().getTime().toString())
+} else {
+    const backupDate = new Date(parseInt(readFileSync("./.lastBackup").toString(), 10))
+    if (backupDate.toDateString() !== new Date().toDateString()) {
+        console.warn("Backup timestamp file indicates there has been more than one day since the last backup. Taking a backup now.")
+        tryAgain = true
+    }
+}
 
 // Run backup task ever night
 setInterval(async () => {
