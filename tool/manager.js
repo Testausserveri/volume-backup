@@ -7,6 +7,7 @@ const Package = require("../package.json")
 
 console.log(`Package: ${Package.name}@${Package.version}`)
 console.log(`Runtime: ${process.version}`)
+console.log(`CWD: ${process.cwd()}`)
 
 require("../src/console")
 
