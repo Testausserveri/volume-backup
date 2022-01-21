@@ -3,14 +3,14 @@ const { WebhookClient } = require("discord.js")
 const { existsSync, writeFileSync, readFileSync } = require("fs")
 const backup = require("../src/index")
 
-const webhookClient = new WebhookClient({ url: process.env.DISCORD_WEBHOOK })
-
 const Package = require("../package.json")
 
 console.log(`Package: ${Package.name}@${Package.version}`)
 console.log(`Runtime: ${process.version}`)
 
 require("../src/console")
+
+const webhookClient = new WebhookClient({ url: process.env.DISCORD_WEBHOOK })
 
 const timeToBackup = "00:05:00"
 
