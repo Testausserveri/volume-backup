@@ -1,6 +1,7 @@
 const { google: { auth, drive } } = require("googleapis")
 
-const token = require("../.token.json")
+// eslint-disable-next-line import/no-dynamic-require
+const token = require(`../${process.env.SERVICE_ACCOUNT ?? ".token.json"}`)
 
 /**
  * Upload a file to a specific shared drive
