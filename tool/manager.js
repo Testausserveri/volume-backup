@@ -38,6 +38,7 @@ setInterval(async () => {
     const currentDate = new Date()
     const currentTime = `${currentDate.getHours().toString().padStart(2, "0")}:${currentDate.getMinutes().toString().padStart(2, "0")}:${currentDate.getSeconds().toString().padStart(2, "0")}`
     if (currentTime === timeToBackup || tryAgain) {
+        tryAgain = false
         console.log("Creating backup...")
         if (tries >= 5) {
             await webhookClient.send(`Failed to create backup ${tries} times. Exiting...`)
