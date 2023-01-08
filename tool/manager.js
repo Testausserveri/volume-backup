@@ -75,7 +75,7 @@ setInterval(async () => {
             console.log("Backup failed", e)
             tries += 1
             tryAgain = true
-            await webhookClient.send(`Backup creation failed (\`${tries}\`, \`${e.name ?? "Unknown"}\`).`)
+            await webhookClient.send(`Backup creation failed (\`${tries}\`, \`${e?.name ?? "Unknown"}\`).`)
         }
     }
 

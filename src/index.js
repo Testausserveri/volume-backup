@@ -97,7 +97,6 @@ module.exports = async function doBackup() {
         )
         console.log(`-> Uploaded (${fileId})`)
     } catch (e) {
-        console.error("Backup creation error", e)
         error = e
     }
 
