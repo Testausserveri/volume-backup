@@ -13,6 +13,8 @@ require("../src/console")
 
 const webhookClient = new WebhookClient({ url: process.env.DISCORD_WEBHOOK })
 
+webhookClient.send(`Volume-backup service version \`${Package.name}@${Package.version}\` started!`)
+
 const timeToBackup = "00:05:00"
 
 let tryAgain = false
