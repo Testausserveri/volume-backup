@@ -72,12 +72,12 @@ setInterval(async () => {
             tryAgain = false
             writeFileSync("./.lastBackup", new Date().getTime().toString())
             await webhookClient.send(`Volume backup created (took \`${((new Date().getTime() - currentUnix) / 1000).toPrecision(2)} min\`)`)
-            console.log("Backup created.")
+            console.log("Backup created")
         } catch (e) {
             console.log("Backup failed", e)
             tries += 1
             tryAgain = true
-            await webhookClient.send(`Backup creation failed (\`${tries}\`, \`${e?.name ?? "Unknown"}\`).`)
+            await webhookClient.send(`Backup creation failed (\`${tries}\`, \`${e?.name ?? "Unknown"}\`)`)
         }
     }
 
