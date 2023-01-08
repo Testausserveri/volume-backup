@@ -76,29 +76,34 @@ module.exports = async function doBackup() {
     let backupPath
     let error = null
 
-    try {
-        // Create archive
-        const archiveCreate = createBackupArchive()
-        if (archiveCreate.error !== null) throw archiveCreate.error
-        archive = archiveCreate.path
-        cacheDirectory = archive.replace(".tar.gz", "")
-        console.log(`Archive created (${archive})`)
+    // eslint-disable-next-line no-async-promise-executor
+    await new Promise(async (resolve) => {
+        try {
+            // Create archive
+            const archiveCreate = createBackupArchive()
+            if (archiveCreate.error !== null) throw archiveCreate.error
+            archive = archiveCreate.path
+            cacheDirectory = archive.replace(".tar.gz", "")
+            console.log(`Archive created (${archive})`)
 
-        // Encrypt the backup
-        const doEncrypt = await encrypt(archive)
-        if (doEncrypt.error !== null) throw doEncrypt.error
-        backupPath = doEncrypt.path
-        console.log(`Archive encrypted (${backupPath})`)
+            // Encrypt the backup
+            const doEncrypt = await encrypt(archive)
+            if (doEncrypt.error !== null) throw doEncrypt.error
+            backupPath = doEncrypt.path
+            console.log(`Archive encrypted (${backupPath})`)
 
-        // Upload the encrypted backup
-        console.log("Uploading...")
-        const fileId = await uploadFile(
-            backupPath.split("/").reverse()[0], "application/tar+gzip", process.env.DRIVE_ID, createReadStream(backupPath)
-        )
-        console.log(`-> Uploaded (${fileId})`)
-    } catch (e) {
-        error = e
-    }
+            // Upload the encrypted backup
+            console.log("Uploading...")
+            const fileId = await uploadFile(
+                backupPath.split("/").reverse()[0], "application/tar+gzip", process.env.DRIVE_ID, createReadStream(backupPath)
+            )
+            console.log(`-> Uploaded (${fileId})`)
+            resolve()
+        } catch (e) {
+            error = e
+            resolve()
+        }
+    })
 
     // Clear cache
     try {
