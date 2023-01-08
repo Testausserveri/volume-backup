@@ -1,6 +1,6 @@
 {
   "name": "volume-backup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Backup all Docker volumes present to cloud storage encrypted & compressed.",
   "main": "index.js",
   "scripts": {
