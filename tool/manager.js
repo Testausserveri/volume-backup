@@ -70,6 +70,7 @@ setInterval(async () => {
             didBackup = true
             tries = 0
             tryAgain = false
+            writeFileSync("./.lastBackup", new Date().getTime().toString())
             await webhookClient.send(`Volume backup created (took \`${((new Date().getTime() - currentUnix) / 1000).toPrecision(2)} min\`)`)
             console.log("Backup created.")
         } catch (e) {
