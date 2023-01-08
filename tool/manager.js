@@ -65,6 +65,7 @@ setInterval(async () => {
             return
         }
         try {
+            await webhookClient.send(`Creating a volume backup (\`${currentTime}\`)`)
             await backup()
             didBackup = true
             tries = 0
