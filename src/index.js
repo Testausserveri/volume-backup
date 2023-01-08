@@ -75,6 +75,7 @@ module.exports = async function doBackup() {
     let cacheDirectory
     let backupPath
     let error = null
+    let fileSize = null
 
     // eslint-disable-next-line no-async-promise-executor
     await new Promise(async (resolve) => {
@@ -84,6 +85,7 @@ module.exports = async function doBackup() {
             if (archiveCreate.error !== null) throw archiveCreate.error
             archive = archiveCreate.path
             cacheDirectory = archive.replace(".tar.gz", "")
+            fileSize = statSync(archive).size / (1024 * 1024) // Size in MB
             console.log(`Archive created (${archive})`)
 
             // Encrypt the backup
@@ -118,4 +120,5 @@ module.exports = async function doBackup() {
 
     // Throw if needed
     if (error !== null) throw error
+    return fileSize
 }
