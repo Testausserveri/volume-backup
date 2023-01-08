@@ -17,7 +17,7 @@ const { uploadFile } = require("./gdrive")
 
 /**
  * Create a backup archive
- * @returns {{ path: string, error: Error | null }}
+ * @returns {Promise<{ path: string, error: Error | null }>}
  */
 async function createBackupArchive() {
     const containers = docker.getContainers()
@@ -80,7 +80,7 @@ module.exports = async function doBackup() {
     await new Promise(async (resolve) => {
         try {
             // Create archive
-            const archiveCreate = createBackupArchive()
+            const archiveCreate = await createBackupArchive()
             if (archiveCreate.error !== null) throw archiveCreate.error
             archive = archiveCreate.path
             cacheDirectory = archive.replace(".tar.gz", "")
