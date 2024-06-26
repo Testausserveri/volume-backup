@@ -19,7 +19,7 @@ module.exports = (filepath) => new Promise((resolve) => {
         const cipher = createHash("sha256").update(process.env.ENCRYPTION_KEY).digest("base64").substr(0, 32)
         output.write(iv) // The initialization vector is the first 16 bytes
         input.pipe(createCipheriv("aes-256-cbc", cipher, iv)).pipe(output)
-        output.on("finish", resolve({ path: newPath, error: null }))
+        output.on("finish", () => resolve({ path: newPath, error: null }))
         output.on("error", (e) => { throw e })
     } catch (e) {
         if (fileCreated !== null) resolve({ path: fileCreated, error: e })
